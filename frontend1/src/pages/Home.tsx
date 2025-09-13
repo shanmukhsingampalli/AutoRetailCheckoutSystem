@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { ArrowLeft, QrCode, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Scan from "./Scan";
+import { useCart } from '../context/CartContext';
+
+// Inside your component
+
 
 interface CartItem {
   id: number;
@@ -12,97 +16,18 @@ interface CartItem {
 }
 
 const ShoppingCart: React.FC = () => {
+  const { cartItems, addItem, incrementQuantity, decrementQuantity, removeItem } = useCart();
   const navigate = useNavigate();
   const [cam, setCam] = useState(false);
   const [data, setData] = useState("No result");
 
   useEffect(() => {
     if (data !== "No result") {
-      setCam(false); // ✅ turn scanner off after successful scan
+      setCam(false); // ✅ turn scanner off after successful scanog
       addItem(data); // ✅ add scanned item to cart
+      setData("No result"); // ✅ reset data for next scan
     }
   }, [data]);
-
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Organic Apples",
-      quantity: 1,
-      price: 2.99,
-      unitPrice: 2.99,
-    },
-    { id: 2, name: "Whole Milk", quantity: 2, price: 3.5, unitPrice: 1.75 },
-    { id: 3, name: "Sourdough Bread", quantity: 1, price: 4.5, unitPrice: 4.5 },
-    { id: 4, name: "Avocado", quantity: 1, price: 1.75, unitPrice: 1.75 },
-  ]);
-
-  const addItem = (id: string) => {
-    setCartItems((items) => {
-      const existingItem = items.find((item) => item.id === Number(id));
-      if (existingItem) {
-        return items.map((item) =>
-          item.id === Number(id)
-            ? {
-                ...item,
-                quantity: item.quantity + 1,
-                price: item.unitPrice
-                  ? item.unitPrice * (item.quantity + 1)
-                  : (item.price / item.quantity) * (item.quantity + 1),
-              }
-            : item
-        );
-      } else {
-        return [
-          ...items,
-          {
-            id: Number(id),
-            name: `Product ${id}`,
-            quantity: 1,
-            price: 1.0,
-            unitPrice: 1.0,
-          },
-        ];
-      }
-    });
-  };
-
-  const incrementQuantity = (id: number) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-              price: item.unitPrice
-                ? item.unitPrice * (item.quantity + 1)
-                : (item.price / item.quantity) * (item.quantity + 1),
-            }
-          : item
-      )
-    );
-  };
-
-  const decrementQuantity = (id: number) => {
-    setCartItems((items) =>
-      items
-        .map((item) =>
-          item.id === id && item.quantity > 1
-            ? {
-                ...item,
-                quantity: item.quantity - 1,
-                price: item.unitPrice
-                  ? item.unitPrice * (item.quantity - 1)
-                  : (item.price / item.quantity) * (item.quantity - 1),
-              }
-            : item
-        )
-        .filter((item) => item.quantity > 0)
-    );
-  };
-
-  const removeItem = (id: number) => {
-    setCartItems((items) => items.filter((item) => item.id !== id));
-  };
 
   const total = cartItems.reduce((sum, item) => sum + item.price, 0);
 

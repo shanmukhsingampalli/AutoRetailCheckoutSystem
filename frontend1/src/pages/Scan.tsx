@@ -26,9 +26,6 @@ const Scan: React.FC<ScanProps> = ({ setData }) => {
 
   return (
     <div className="box">
-      <Toaster position="top-right" reverseOrder={false} />
-      <div className="title">Scanner</div>
-
       <div className="scan">
         <BarcodeScannerComponent
           width={500}
@@ -37,26 +34,6 @@ const Scan: React.FC<ScanProps> = ({ setData }) => {
           delay={1500}
         />
       </div>
-
-      <p>Scanned Data: {currentData}</p>
-
-      <h2>Scan History</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Scanned Result</th>
-          </tr>
-        </thead>
-        <tbody>
-          {scanHistory.map((result, index) => (
-            <tr key={index}>
-              <td>{index + 1}</td>
-              <td>{result}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 };

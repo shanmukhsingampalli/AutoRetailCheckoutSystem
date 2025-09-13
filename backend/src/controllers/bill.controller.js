@@ -1,14 +1,15 @@
 import { Bill } from "../models/bill.model.js"
+import { Product } from "../models/product.model.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const createBill = asyncHandler(async (req, res) => {
-  const { billId, items, totalAmount } = req.body;
+  const { items, totalAmount } = req.body;
 
-  if (!billId || !items || !totalAmount) {
+  if (!items || !totalAmount) {
     return res
       .status(400)
-      .json(new ApiResponse(400, {}, "billId, items, and totalAmount are required"));
+      .json(new ApiResponse(400, {}, "items and totalAmount are required"));
   }
 
   if (!Array.isArray(items) || items.length === 0) {
@@ -17,15 +18,17 @@ const createBill = asyncHandler(async (req, res) => {
       .json(new ApiResponse(400, {}, "Items array must not be empty"));
   }
 
-  for (const item of items) {
-    const { productId, quantity } = item;
+  const itemsWithDetails = [];
 
-    const product = await Product.findById(productId);
+  for (const item of items) {
+    const { id, quantity } = item;
+
+    const product = await Product.findOne({ barcode: id });
 
     if (!product) {
       return res
         .status(404)
-        .json(new ApiResponse(404, {}, `Product not found: ${productId}`));
+        .json(new ApiResponse(404, {}, `Product not found: ${id}`));
     }
 
     if (product.stock < quantity) {
@@ -34,13 +37,23 @@ const createBill = asyncHandler(async (req, res) => {
         .json(new ApiResponse(400, {}, `Insufficient stock for product: ${product.name}`));
     }
 
+    // Update stock
     product.stock -= quantity;
     await product.save();
+
+    // Add to bill items
+    itemsWithDetails.push({
+      productId: product._id,
+      name: product.name,
+      barcode: product.barcode,
+      price: product.price,
+      quantity,
+    });
   }
 
   const newBill = new Bill({
-    billId,
-    items,
+    billId: Date.now().toString(),
+    items: itemsWithDetails, // ✅ Correct key name
     totalAmount,
   });
 
@@ -50,6 +63,8 @@ const createBill = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, { bill: newBill }, "Bill created and stock updated successfully"));
 });
+
+
 
 const viewAllBills = asyncHandler(async (req, res) => {
   const bills = await Bill.find().sort({ createdAt: -1 });
@@ -84,7 +99,7 @@ const getBillDetails = asyncHandler(async (req, res) => {
   if (!billId) {
     return res.status(400).json(new ApiResponse(400, {}, "billId required"));
   }
-  const bill = await Bill.findOne({ billId: billId });
+  const bill = await Bill.findOne({ _id: billId });
 
   if (!bill) {
     return res

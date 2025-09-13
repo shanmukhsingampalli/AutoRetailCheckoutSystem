@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { ArrowLeft, CreditCard, Smartphone, Truck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useCart } from '../context/CartContext';
+
 
 function Payment() {
   const navigate = useNavigate();
@@ -13,6 +16,8 @@ function Payment() {
     cardholderName: "",
   });
 
+  const { cartItems } = useCart();
+
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -20,7 +25,7 @@ function Payment() {
     }));
   };
 
-  const handleBill = () => {
+  const handleBill = async() => {
     if (selectedPaymentMethod === "credit-card") {
       // ✅ Validate card details
       if (
@@ -34,14 +39,22 @@ function Payment() {
       }
     }
 
+    let totalAmount = cartItems.reduce((sum, item) => sum + item.price, 0);
+    totalAmount += totalAmount * 0.08; // Adding 8% tax
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/bill/createBill`, {
+      items: cartItems,
+      totalAmount: totalAmount,
+    })
     // ✅ If validation passes or for other methods
-    navigate("/bill", { replace: true });
+    navigate(`/bill?id=${response.data.data.bill._id}`, { replace: true });
   };
 
   return (
     <div className="min-h-screen max-w-2xl mx-auto">
       {/* Header */}
-      <div className="bg-white px-6 py-4 flex items-center">
+      <div 
+      onClick={() => navigate("/")}
+      className="bg-white px-6 py-4 flex items-center">
         <ArrowLeft className="w-6 h-6 text-gray-800" />
         <h1 className="text-xl font-semibold text-gray-800 text-center flex-1">
           Payment

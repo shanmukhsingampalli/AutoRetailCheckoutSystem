@@ -7,6 +7,7 @@ interface BillDetails {
   billId: string;
   totalAmount: number;
   date: Date;
+  _id: string;
 }
 
 function Bill() {
@@ -68,7 +69,7 @@ function Bill() {
             <div
               key={bill.billId}
               onClick={() => {
-                navigate(`/bills-details?billId=${bill.billId}`);
+                navigate(`/bills-details?billId=${bill._id}`);
               }}
               className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
             >
