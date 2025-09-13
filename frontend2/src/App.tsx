@@ -1,7 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import AllProducts from "./pages/AllProducts";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import Bill from "./pages/Bill";
 
 function App() {
   return (
@@ -14,12 +16,24 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/login" element={<Login />} />
+
       <Route
-        path="/login"
+        path="/all-products"
         element={
-          <Login />
+          <ProtectedRoute>
+            <AllProducts />
+          </ProtectedRoute>
         }
-       /> 
+      />
+      <Route
+        path="/bills"
+        element={
+          <ProtectedRoute>
+            <Bill />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }
