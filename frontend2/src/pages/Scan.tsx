@@ -1,4 +1,3 @@
-import { useState } from "react";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import toast from "react-hot-toast";
 
