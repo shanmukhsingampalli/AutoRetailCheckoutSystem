@@ -2,21 +2,16 @@ import React, { useEffect, useState } from "react";
 import { ArrowLeft, QrCode, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Scan from "./Scan";
-import { useCart } from '../context/CartContext';
-
-// Inside your component
-
-
-interface CartItem {
-  id: number;
-  name: string;
-  quantity: number;
-  price: number;
-  unitPrice?: number;
-}
+import { useCart } from "../context/CartContext";
 
 const ShoppingCart: React.FC = () => {
-  const { cartItems, addItem, incrementQuantity, decrementQuantity, removeItem } = useCart();
+  const {
+    cartItems,
+    addItem,
+    incrementQuantity,
+    decrementQuantity,
+    removeItem,
+  } = useCart();
   const navigate = useNavigate();
   const [cam, setCam] = useState(false);
   const [data, setData] = useState("No result");
@@ -32,7 +27,8 @@ const ShoppingCart: React.FC = () => {
   const total = cartItems.reduce((sum, item) => sum + item.price, 0);
 
   const handelPayment = () => {
-   if(cartItems && cartItems.length != 0) navigate("/payment", { replace: true });
+    if (cartItems && cartItems.length != 0)
+      navigate("/payment", { replace: true });
   };
 
   return (

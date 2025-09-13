@@ -1,4 +1,3 @@
-import { useState } from "react";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import toast from "react-hot-toast";
 
@@ -7,20 +6,14 @@ interface ScanProps {
 }
 
 const Scan: React.FC<ScanProps> = ({ setData }) => {
-  const [currentData, setCurrentData] = useState("No result");
-  const [scanHistory, setScanHistory] = useState<string[]>([]);
   const beepSound = new Audio("/beep.mp3");
 
   const handleScan = (_err: unknown, result: { text: string } | null) => {
     if (result && result.text) {
       setData(result.text); // ✅ update parent state
-      setCurrentData(result.text);
-      setScanHistory((prev) => [...prev, result.text]);
 
       beepSound.play();
       toast.success(`Product scanned: ${result.text}`);
-    } else {
-      setCurrentData("No result");
     }
   };
 
