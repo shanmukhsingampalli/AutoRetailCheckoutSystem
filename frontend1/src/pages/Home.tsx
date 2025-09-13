@@ -19,6 +19,7 @@ const ShoppingCart: React.FC = () => {
       name: "Organic Apples",
       quantity: 1,
       price: 2.99,
+      unitPrice: 2.99,
     },
     {
       id: 2,
@@ -32,12 +33,14 @@ const ShoppingCart: React.FC = () => {
       name: "Sourdough Bread",
       quantity: 1,
       price: 4.5,
+      unitPrice: 4.5,
     },
     {
       id: 4,
       name: "Avocado",
       quantity: 1,
       price: 1.75,
+      unitPrice: 1.75,
     },
   ]);
 
@@ -57,7 +60,6 @@ const ShoppingCart: React.FC = () => {
             : item
         );
       } else {
-        // For demo, add a generic item. Replace with real product lookup if needed.
         return [
           ...items,
           {
@@ -65,6 +67,7 @@ const ShoppingCart: React.FC = () => {
             name: `Product ${id}`,
             quantity: 1,
             price: 1.0,
+            unitPrice: 1.0,
           },
         ];
       }
@@ -117,7 +120,7 @@ const ShoppingCart: React.FC = () => {
         {/* Header */}
         <div className="flex items-center px-4 py-6 bg-white border-b border-gray-100">
           <h1 className="text-xl font-bold text-gray-900 flex-1 text-center mr-12">
-            Cart
+            Scan & Go
           </h1>
         </div>
 
@@ -128,7 +131,7 @@ const ShoppingCart: React.FC = () => {
             onClick={() => {
               setCam(true);
             }}
-            className="bg-gray-50 rounded-2xl p-4 border border-gray-200"
+            className="bg-gray-50 rounded-2xl p-4 border border-gray-200 cursor-pointer"
           >
             <div className="flex items-center space-x-3">
               <div className="p-2 bg-gray-200 rounded-lg">
@@ -163,38 +166,36 @@ const ShoppingCart: React.FC = () => {
                   key={item.id}
                   className="flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0"
                 >
-                  <div className="flex-1">
-                    <h3 className="font-medium text-gray-900 mb-1">
-                      {item.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      Qty: {item.quantity}
-                      {item.unitPrice && (
-                        <span className="block text-gray-400">
-                          ${item.unitPrice.toFixed(2)} each
-                        </span>
-                      )}
-                    </p>
-                    {/* Quantity Controls */}
-                    <div className="flex items-center space-x-2 mt-2">
-                      <button
-                        onClick={() => decrementQuantity(item.id)}
-                        className="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-                      >
-                        -
-                      </button>
-                      <span className="text-gray-800 font-medium">
-                        {item.quantity}
-                      </span>
-                      <button
-                        onClick={() => incrementQuantity(item.id)}
-                        className="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
-                      >
-                        +
-                      </button>
-                    </div>
+                  {/* Left: Item Name + Unit Price */}
+                  <div className="flex flex-col w-1/3">
+                    <h3 className="font-medium text-gray-900">{item.name}</h3>
+                    {item.unitPrice && (
+                      <p className="text-sm text-gray-500">
+                        ${item.unitPrice.toFixed(2)} per unit
+                      </p>
+                    )}
                   </div>
 
+                  {/* Middle: Quantity Controls */}
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => decrementQuantity(item.id)}
+                      className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 text-gray-600 hover:bg-gray-300 transition"
+                    >
+                      -
+                    </button>
+                    <span className="w-6 text-center text-gray-800 font-medium">
+                      {item.quantity}
+                    </span>
+                    <button
+                      onClick={() => incrementQuantity(item.id)}
+                      className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-500 text-white hover:bg-blue-600 transition"
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Right: Price + Delete */}
                   <div className="flex items-center space-x-3">
                     <span className="font-semibold text-gray-900">
                       ${item.price.toFixed(2)}
