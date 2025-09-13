@@ -1,6 +1,7 @@
-import { Admin } from "../models/admin.model";
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiResponse } from "../utils/ApiResponse";
+import { Admin } from "../models/admin.model.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+
 
 const loginUser = asyncHandler(async (req, res) => {
   const { username, password } = req.body;
@@ -19,14 +20,14 @@ const loginUser = asyncHandler(async (req, res) => {
       .json(new ApiResponse(400, {}, "No such admin found"));
   }
 
-  const valid = await Admin.isPasswordCorrect(password);
+  const valid = await admin.isPasswordCorrect(password);
 
   if (valid) {
     const token = await admin.generateAuthToken();
     return res
       .status(200)
       .json(
-        new ApiResponse(200, { user: user._id, token }, "Successful login")
+        new ApiResponse(200, { user: admin._id, token }, "Successful login")
       );
   } else {
     return res
@@ -42,5 +43,5 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 export {
-    loginUser
+  loginUser
 }
