@@ -1,6 +1,6 @@
-import { Bill } from "../models/bill.model"
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiResponse } from "../utils/ApiResponse";
+import { Bill } from "../models/bill.model.js"
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 const createBill = asyncHandler(async (req, res) => {
   const { billId, items, totalAmount } = req.body;
@@ -59,7 +59,47 @@ const viewAllBills = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { bills }, "All bills retrieved successfully"));
 });
 
+const searchBills = asyncHandler(async (req, res) => {
+  const { billId } = req.body;
+  if (!billId) {
+    return res.status(400).json(new ApiResponse(400, {}, "billId required"));
+  }
+
+  const bills = await Bill.find({ billId: { $regex: billId, $options: "i" } });
+
+  if (bills.length === 0) {
+    return res
+      .status(404)
+      .json(new ApiResponse(404, {}, "No bills found matching the criteria"));
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { bills }, "Bills found matching the criteria"));
+});
+
+const getBillDetails = asyncHandler(async (req, res) => {
+  const { billId } = req.body;  
+
+  if (!billId) {
+    return res.status(400).json(new ApiResponse(400, {}, "billId required"));
+  }
+  const bill = await Bill.findOne({ billId: billId });
+
+  if (!bill) {
+    return res
+      .status(404)
+      .json(new ApiResponse(404, {}, "No such bill found"));
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { bill }, "Bill found"));
+});
+
 export {
     createBill,
-    viewAllBills
+    viewAllBills,
+    searchBills,
+    getBillDetails
 }

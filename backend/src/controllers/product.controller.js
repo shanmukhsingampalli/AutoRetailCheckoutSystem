@@ -1,6 +1,6 @@
-import { Product } from "../models/product.model";
-import { asyncHandler } from "../utils/asyncHandler";
-import { ApiResponse } from "../utils/ApiResponse";
+import { Product } from "../models/product.model.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 const updateProduct = asyncHandler(async (req, res) => {
   const { barcode, name, price, stock } = req.body;
@@ -31,26 +31,6 @@ const updateProduct = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, { product }, "Product updated"));
 });
 
-const getDetails = asyncHandler(async (req, res) => {
-  const { barcode } = req.body;
-
-  if (!barcode) {
-    return res.status(400).json(new ApiResponse(400, {}, "barcode required"));
-  }
-
-  const product = await Product.findOne({ barcode: barcode });
-
-  if (!product) {
-    return res
-      .status(400)
-      .json(new ApiResponse(400, {}, "No such product found"));
-  }
-
-  return res
-    .status(200)
-    .json(new ApiResponse(200, { product }, "Product found"));
-});
-
 const viewAllProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({});
   return res
@@ -75,9 +55,26 @@ const searchProducts = asyncHandler(async (req, res) => {
   }
 })
 
+const getProductDetails = asyncHandler(async (req, res) => {
+  const { barcode } = req.body; 
+  if (!barcode) {
+    return res.status(400).json(new ApiResponse(400, {}, "barcode required"));
+  } 
+  const product = await Product.findOne({ barcode: barcode });
+
+  if (!product) { 
+    return res
+      .status(404)
+      .json(new ApiResponse(404, {}, `Product not found: ${barcode}`));
+  }
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { product }, "Product details retrieved successfully"));
+});
+
 export {
   updateProduct,
-  getDetails,
   viewAllProducts,
-  searchProducts
+  searchProducts,
+  getProductDetails
 }
