@@ -6,7 +6,7 @@ const router = new Router();
 
 router.route("/createBill").post(createBill);
 
-router.route("viewAllBills").post(verifyAdmin, viewAllBills)
+router.route("/viewAllBills").post(verifyAdmin, viewAllBills)
 
 router.route("/searchBills").post(verifyAdmin, searchBills);
 

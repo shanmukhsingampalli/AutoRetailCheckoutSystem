@@ -1,7 +1,9 @@
 import React from "react";
 import { LogOut, ShoppingCart, FolderOpen, Receipt } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-md mx-auto">
@@ -16,7 +18,11 @@ const Home: React.FC = () => {
         {/* Cards */}
         <div className="space-y-6">
           {/* Add or Update Product Card */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center shadow-sm">
+          <div 
+          onClick={()=>{
+            // navigate("/")
+          }}
+          className="bg-white rounded-2xl border border-gray-200 p-8 text-center shadow-sm">
             <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
               <ShoppingCart className="w-10 h-10 text-white" />
             </div>
@@ -29,7 +35,11 @@ const Home: React.FC = () => {
           </div>
 
           {/* View All Products Card */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center shadow-sm">
+          <div 
+          onClick={()=>{
+            navigate("/all-products")
+          }}
+          className="bg-white rounded-2xl border border-gray-200 p-8 text-center shadow-sm">
             <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
               <FolderOpen className="w-10 h-10 text-white" />
             </div>
@@ -40,7 +50,11 @@ const Home: React.FC = () => {
           </div>
 
           {/* View All Bills Card */}
-          <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center shadow-sm">
+          <div 
+          onClick={()=>{
+            navigate("/bills")
+          }}
+          className="bg-white rounded-2xl border border-gray-200 p-8 text-center shadow-sm">
             <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
               <Receipt className="w-10 h-10 text-white" />
             </div>

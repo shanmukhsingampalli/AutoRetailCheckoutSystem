@@ -13,7 +13,6 @@ function AllProducts() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortField, setSortField] = useState<"name" | "stock">("name");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const products: Product[] = [
     {
@@ -90,38 +89,6 @@ function AllProducts() {
       return aValue < bValue ? 1 : -1;
     });
 
-  // Responsive modal for product details
-  const ProductModal = ({
-    product,
-    onClose,
-  }: {
-    product: Product;
-    onClose: () => void;
-  }) => (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white rounded-lg shadow-lg max-w-xs w-full p-6 relative">
-        <button
-          className="absolute top-2 right-2 text-gray-400 hover:text-gray-700"
-          onClick={onClose}
-        >
-          ×
-        </button>
-        <h2 className="text-lg font-semibold mb-2">{product.name}</h2>
-        <p className="text-sm text-gray-500 mb-2">SKU: {product.sku}</p>
-        <p className="text-base font-medium mb-2">
-          Price: ${product.price.toFixed(2)}
-        </p>
-        <span
-          className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getStockColor(
-            product.stock
-          )}`}
-        >
-          {product.stock} in stock
-        </span>
-      </div>
-    </div>
-  );
-
   return (
     <div className="min-h-screen bg-gray-50 p-3 sm:p-6">
       <div className="max-w-5xl mx-auto">
@@ -184,12 +151,10 @@ function AllProducts() {
           {/* Product List */}
           <div className="divide-y divide-gray-200">
             {filteredProducts.map((product) => (
-              <button
+              <div
                 key={product.id}
                 className="flex flex-col sm:flex-row sm:items-center sm:justify-between 
-                           px-4 sm:px-6 py-3 sm:py-4 hover:bg-gray-100 transition-colors duration-200 w-full text-left focus:outline-none"
-                onClick={() => setSelectedProduct(product)}
-                aria-label={`View details for ${product.name}`}
+                           px-4 sm:px-6 py-3 sm:py-4 hover:bg-gray-50 transition-colors duration-200"
               >
                 {/* Left section (Name + SKU) */}
                 <div className="flex-1 mb-2 sm:mb-0">
@@ -202,22 +167,19 @@ function AllProducts() {
                 </div>
 
                 {/* Right section (Price + Stock) */}
-                <div className="flex items-center gap-3 flex-nowrap">
-                  <div className="flex flex-col xs:flex-row xs:items-center gap-2 sm:gap-6">
-                    <span className="text-base sm:text-lg font-semibold text-gray-900">
-                      ${product.price.toFixed(2)}
-                    </span>
-
-                    <span
-                      className={`inline-flex items-center justify-center w-auto max-w-max px-3 py-1 rounded-full text-xs sm:text-sm font-medium flex-none ${getStockColor(
-                        product.stock
-                      )}`}
-                    >
-                      {product.stock} in stock
-                    </span>
-                  </div>
+                <div className="flex flex-col xs:flex-row xs:items-center gap-2 sm:gap-6">
+                  <span className="text-base sm:text-lg font-semibold text-gray-900">
+                    ${product.price.toFixed(2)}
+                  </span>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs sm:text-sm font-medium ${getStockColor(
+                      product.stock
+                    )}`}
+                  >
+                    {product.stock} in stock
+                  </span>
                 </div>
-              </button>
+              </div>
             ))}
           </div>
 
@@ -233,13 +195,6 @@ function AllProducts() {
           )}
         </div>
       </div>
-      {/* Modal for product details */}
-      {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
     </div>
   );
 }
