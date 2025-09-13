@@ -26,7 +26,6 @@ function AllProducts() {
         `${import.meta.env.VITE_BASE_URL}/product/viewAllProducts`,
         {}
       );
-      console.log(response);
       setProducts(response.data.data.products);
     };
     fetchProducts();

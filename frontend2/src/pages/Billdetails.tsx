@@ -1,44 +1,33 @@
-import React, { useRef } from "react";
-import { Download, QrCode } from "lucide-react";
+import React, { useRef, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import axios from "axios";
 
 interface Item {
   id: number;
   name: string;
   description: string;
   price: number;
+  quantity: number;
 }
 
 function BillDetails() {
   const billContentRef = useRef<HTMLDivElement>(null);
 
-  const items: Item[] = [
-    {
-      id: 1,
-      name: "Organic Avocados",
-      description: "2 units x $1.99",
-      price: 3.98,
-    },
-    {
-      id: 2,
-      name: "Whole Wheat Bread",
-      description: "1 unit x $3.49",
-      price: 3.49,
-    },
-    {
-      id: 3,
-      name: "Free-Range Eggs",
-      description: "1 dozen x $4.99",
-      price: 4.99,
-    },
-    {
-      id: 4,
-      name: "Kombucha",
-      description: "1 bottle x $3.29",
-      price: 3.29,
-    },
-  ];
+  const [items, setItems] = useState<Item[]>([]);
+  const [searchParams] = useSearchParams();
+  const billId = searchParams.get('billId');
 
-  const subtotal = items.reduce((sum, item) => sum + item.price, 0);
+  useEffect(() => {
+    const fetchBillDetails = async () => {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/bill/getBillDetails`, {
+        billId
+      })
+      setItems(response.data.data.bill.items);
+    }
+    fetchBillDetails();
+  }, []);
+
+  const subtotal = items.reduce((sum, item) => sum + item.price*item.quantity, 0);
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
 
@@ -55,7 +44,7 @@ function BillDetails() {
           <h2 className="text-3xl font-bold mb-2" style={{ color: "#1f2937" }}>
             Your Receipt
           </h2>
-          <p style={{ color: "#6b7280" }}>Bill ID: #B123-XYZ-789</p>
+          <p style={{ color: "#6b7280" }}>Bill ID: {billId}</p>
         </div>
 
         {/* Items List */}
@@ -67,14 +56,14 @@ function BillDetails() {
                   {item.name}
                 </h3>
                 <p className="text-sm" style={{ color: "#6b7280" }}>
-                  {item.description}
+                  {item.quantity + " x " + item.price.toFixed(2)}
                 </p>
               </div>
               <div
                 className="text-lg font-semibold"
                 style={{ color: "#1f2937" }}
               >
-                ${item.price.toFixed(2)}
+                ${item.price.toFixed(2)*item.quantity}
               </div>
             </div>
           ))}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ArrowLeft, Search, FileText, ChevronRight } from "lucide-react";
 
@@ -10,6 +11,7 @@ interface BillDetails {
 
 function Bill() {
   const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
 
   const [bills, setBills] = useState<BillDetails[]>([]);
 
@@ -20,7 +22,6 @@ function Bill() {
           Authorization : `Bearer ${localStorage.getItem("token")}`
         }
       });
-      console.log(response.data.data.bills);
       setBills(response.data.data.bills);
     }
 
@@ -36,7 +37,9 @@ function Bill() {
     <div className="min-h-screen max-w-4xl mx-auto">
       {/* Header */}
       <div className="bg-white px-4 py-4">
-        <div className="flex items-center">
+        <div 
+        onClick={() => navigate("/")}
+        className="flex items-center">
           <button className="p-1">
             <ArrowLeft className="w-6 h-6 text-gray-600" />
           </button>
@@ -65,7 +68,7 @@ function Bill() {
             <div
               key={bill.billId}
               onClick={() => {
-                
+                navigate(`/bills-details?billId=${bill.billId}`);
               }}
               className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
             >
