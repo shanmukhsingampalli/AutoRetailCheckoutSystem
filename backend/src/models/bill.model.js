@@ -37,6 +37,8 @@ const billSchema = new mongoose.Schema({
     required: true,
     min: 0,
   }
+},{
+  timestamps: true
 });
 
 export const Bill = mongoose.model('Bill', billSchema);

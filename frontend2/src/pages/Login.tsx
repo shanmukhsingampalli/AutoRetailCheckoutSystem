@@ -17,7 +17,7 @@ const Login: React.FC = () => {
       setError('');
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/admin/login`, { username, password });
       if(response.status === 200) {
-            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('token', response.data.data.token);
             navigate("/");
         }else {
             setError('Invalid username or password.');

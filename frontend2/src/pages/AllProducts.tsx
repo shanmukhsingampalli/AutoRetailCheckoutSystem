@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { Search, ChevronLeft, ChevronDown } from "lucide-react";
 
 interface Product {
+  barcode: string;
   id: string;
   name: string;
   price: number;
-  sku: string;
   stock: number;
 }
 
@@ -14,50 +16,18 @@ function AllProducts() {
   const [sortField, setSortField] = useState<"name" | "stock">("name");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
-  const products: Product[] = [
-    {
-      id: "1",
-      name: "Organic Apples",
-      price: 2.5,
-      sku: "123456789012",
-      stock: 150,
-    },
-    {
-      id: "2",
-      name: "Whole Wheat Bread",
-      price: 3.0,
-      sku: "987654321098",
-      stock: 75,
-    },
-    {
-      id: "3",
-      name: "Free-Range Eggs",
-      price: 4.5,
-      sku: "112233445566",
-      stock: 50,
-    },
-    {
-      id: "4",
-      name: "Almond Milk",
-      price: 3.75,
-      sku: "665544332211",
-      stock: 100,
-    },
-    {
-      id: "5",
-      name: "Cheddar Cheese",
-      price: 5.0,
-      sku: "121212121212",
-      stock: 60,
-    },
-    {
-      id: "6",
-      name: "Organic Tofu",
-      price: 2.75,
-      sku: "343434343434",
-      stock: 10,
-    },
-  ];
+  const navigate = useNavigate();
+
+  const [products, setProducts] = useState<Product[]>([]);
+
+   useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/product/viewAllProducts`,{})
+      console.log(response)
+      setProducts(response.data.data.products);
+    }
+    fetchProducts();
+   }, [])
 
   const getStockColor = (stock: number) => {
     if (stock >= 100) return "bg-green-100 text-green-700";
@@ -79,7 +49,7 @@ function AllProducts() {
       const term = searchTerm.toLowerCase();
       return (
         product.name.toLowerCase().includes(term) ||
-        product.sku.toLowerCase().includes(term)
+        product.barcode.toLowerCase().includes(term)
       );
     })
     .sort((a, b) => {
@@ -98,7 +68,11 @@ function AllProducts() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
 
-        <div className="flex items-center mb-8 gap-4">
+        <div 
+        onClick={()=>{
+            navigate("/")
+          }}
+        className="flex items-center mb-8 gap-4">
           <ChevronLeft />
 
           <h1 className="text-3xl font-semibold text-gray-900">Products</h1>
@@ -160,7 +134,7 @@ function AllProducts() {
                   <h3 className="text-lg font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
                     {product.name}
                   </h3>
-                  <p className="text-sm text-gray-500 mt-1">#{product.sku}</p>
+                  <p className="text-sm text-gray-500 mt-1">#{product.barcode}</p>
                 </div>
                 <div className="flex items-center space-x-6">
                   <span className="text-lg font-semibold text-gray-900">

@@ -1,19 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { ArrowLeft, Search, FileText, ChevronRight } from "lucide-react";
 
-const bills = [
-  { id: "1234567890", amount: 250.0 },
-  { id: "9876543210", amount: 175.5 },
-  { id: "4567891230", amount: 320.75 },
-  { id: "7891234560", amount: 110.2 },
-];
+interface BillDetails {
+  billId: string;
+  totalAmount: number;
+  date: Date;
+}
 
 function Bill() {
   const [searchTerm, setSearchTerm] = useState("");
 
+  const [bills, setBills] = useState<BillDetails[]>([]);
+
+  useEffect(() => {
+    const fetchBills = async () => {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/bill/viewAllBills`,{},{
+        headers : {
+          Authorization : `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      console.log(response.data.data.bills);
+      setBills(response.data.data.bills);
+    }
+
+    fetchBills();
+  },[])
+
   // Filter bills by ID
   const filteredBills = bills.filter((bill) =>
-    bill.id.toLowerCase().includes(searchTerm.toLowerCase())
+    bill.billId.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -47,7 +63,10 @@ function Bill() {
         {filteredBills.length > 0 ? (
           filteredBills.map((bill) => (
             <div
-              key={bill.id}
+              key={bill.billId}
+              onClick={() => {
+                
+              }}
               className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer"
             >
               <div className="flex items-center justify-between">
@@ -60,9 +79,9 @@ function Bill() {
                   {/* Bill Info */}
                   <div>
                     <div className="text-lg font-semibold text-gray-900">
-                      ${bill.amount.toFixed(2)}
+                      ${bill.totalAmount.toFixed(2)}
                     </div>
-                    <div className="text-sm text-gray-500">ID: {bill.id}</div>
+                    <div className="text-sm text-gray-500">ID: {bill.billId}</div>
                   </div>
                 </div>
 
