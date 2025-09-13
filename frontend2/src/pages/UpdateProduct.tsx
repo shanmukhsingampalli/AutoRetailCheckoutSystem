@@ -26,8 +26,6 @@ const UpdateProduct: React.FC = () => {
           );
 
           const product = response.data.data.product;
-
-          // ✅ convert numbers to strings for inputs
           setItem({
             ...product,
             price: product.price.toString(),
@@ -60,13 +58,18 @@ const UpdateProduct: React.FC = () => {
           ...item,
           price: Number(item.price), // ✅ convert back
           stock: Number(item.stock),
+        }, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         }
       );
-      alert("✅ Product updated successfully!");
       navigate("/all-products");
     } catch (error) {
       console.error("Error updating product:", error);
       alert("❌ Failed to update product.");
+      setCam(true); // retry scanning
+      setItem(null); // reset item
     }
   };
 
@@ -74,6 +77,7 @@ const UpdateProduct: React.FC = () => {
     <div>
       {cam && (
         <div className="flex flex-col min-h-screen justify-center items-center bg-gray-100">
+          <h1 className="font-bold text-center text-4xl mb-10">Scan Barcode</h1>
           <Scan setData={setData} />
         </div>
       )}

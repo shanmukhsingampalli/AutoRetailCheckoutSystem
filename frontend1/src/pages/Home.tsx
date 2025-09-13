@@ -32,7 +32,7 @@ const ShoppingCart: React.FC = () => {
   const total = cartItems.reduce((sum, item) => sum + item.price, 0);
 
   const handelPayment = () => {
-    navigate("/payment", { replace: true });
+   if(cartItems && cartItems.length != 0) navigate("/payment", { replace: true });
   };
 
   return (

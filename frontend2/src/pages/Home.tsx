@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
+  const logoutFunction = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  }
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-md mx-auto">
@@ -12,7 +16,10 @@ const Home: React.FC = () => {
           <h1 className="text-2xl font-semibold text-gray-900">
             Inventory Manager
           </h1>
-          <LogOut color="#eb0000" />
+          <div
+          onClick={logoutFunction}>
+            <LogOut color="#eb0000" />
+          </div>
         </div>
 
         {/* Cards */}

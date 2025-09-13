@@ -133,7 +133,7 @@ const [items, setItems] = useState<Item[]>([]);
 
       {/* QR + Buttons (Not included in PDF) */}
       <div className="max-w-md mx-auto mt-6 space-y-3 text-center">
-        <div
+        {/* <div
           className="inline-block p-6 rounded-2xl shadow-lg mb-4"
           style={{ backgroundColor: "#0d9488" }}
         >
@@ -145,8 +145,8 @@ const [items, setItems] = useState<Item[]>([]);
           </div>
         </div>
         <p className="text-sm" style={{ color: "#6b7280" }}>
-          Scan for details
-        </p>
+          Show at security
+        </p> */}
 
         <button
           onClick={handleDownloadPDF}
