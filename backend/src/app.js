@@ -8,14 +8,6 @@ app.use(cors({
     credentials: true 
 }))
 
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "replace-with-secure-secret",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
