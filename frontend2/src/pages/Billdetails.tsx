@@ -1,8 +1,5 @@
 import React, { useRef } from "react";
 import { Download, QrCode } from "lucide-react";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-import { useNavigate } from "react-router-dom"; // ✅ Import navigate
 
 interface Item {
   id: number;
@@ -11,9 +8,9 @@ interface Item {
   price: number;
 }
 
-function Bill() {
+function BillDetails() {
   const billContentRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate(); // ✅ hook for navigation
+
   const items: Item[] = [
     {
       id: 1,
@@ -44,25 +41,6 @@ function Bill() {
   const subtotal = items.reduce((sum, item) => sum + item.price, 0);
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
-
-  // Function to generate PDF only up to total
-  const handleDownloadPDF = async () => {
-    if (!billContentRef.current) return;
-
-    const canvas = await html2canvas(billContentRef.current, { scale: 2 });
-    const imgData = canvas.toDataURL("image/png");
-
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const imgWidth = pageWidth - 20;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    pdf.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-    pdf.save("receipt.pdf");
-  };
-  const handleHome = () => {
-    navigate("/", { replace: true }); // ✅ Navigate to home
-  };
 
   return (
     <div className="min-h-screen p-4" style={{ backgroundColor: "#e5e7eb" }}>
@@ -122,42 +100,8 @@ function Bill() {
           </div>
         </div>
       </div>
-
-      {/* QR + Buttons (Not included in PDF) */}
-      <div className="max-w-md mx-auto mt-6 space-y-3 text-center">
-        <div
-          className="inline-block p-6 rounded-2xl shadow-lg mb-4"
-          style={{ backgroundColor: "#0d9488" }}
-        >
-          <div
-            className="w-24 h-24 rounded-xl flex items-center justify-center"
-            style={{ backgroundColor: "#ffffff" }}
-          >
-            <QrCode className="w-16 h-16" style={{ color: "#1f2937" }} />
-          </div>
-        </div>
-        <p className="text-sm" style={{ color: "#6b7280" }}>
-          Scan for details
-        </p>
-
-        <button
-          onClick={handleDownloadPDF}
-          className="w-full py-4 px-6 rounded-2xl font-semibold flex items-center justify-center space-x-2 transition-colors"
-          style={{ backgroundColor: "#2563eb", color: "#ffffff" }}
-        >
-          <Download className="w-5 h-5" />
-          <span>Download as PDF</span>
-        </button>
-        <button
-          className="w-full py-4 px-6 rounded-2xl font-semibold flex items-center justify-center space-x-2 transition-colors"
-          onClick={handleHome}
-          style={{ backgroundColor: "#000000", color: "#ffffff" }}
-        >
-          <span>Go to Home</span>
-        </button>
-      </div>
     </div>
   );
 }
 
-export default Bill;
+export default BillDetails;
