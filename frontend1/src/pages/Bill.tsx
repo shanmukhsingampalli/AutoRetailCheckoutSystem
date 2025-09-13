@@ -1,8 +1,8 @@
-import React, { useRef , useEffect, useState} from "react";
-import { Download, QrCode } from "lucide-react";
+import { useRef, useEffect, useState } from "react";
+import { Download } from "lucide-react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
-import { useCart } from '../context/CartContext';
+import { useCart } from "../context/CartContext";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom"; // ✅ Import navigate
 
@@ -19,26 +19,30 @@ function Bill() {
   const navigate = useNavigate(); // ✅ hook for navigation
   const { clearCart } = useCart();
 
-const [items, setItems] = useState<Item[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
   const [searchParams] = useSearchParams();
-  const billId = searchParams.get('id');
+  const billId = searchParams.get("id");
 
   useEffect(() => {
     const fetchBillDetails = async () => {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/bill/getBillDetails`, {
-        billId : billId
-      })
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/bill/getBillDetails`,
+        {
+          billId: billId,
+        }
+      );
       setItems(response.data.data.bill.items);
-    }
+    };
     fetchBillDetails();
     clearCart();
   }, []);
 
-  const subtotal = items.reduce((sum, item) => sum + item.price*item.quantity, 0);
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
-
-
 
   // Function to generate PDF only up to total
   const handleDownloadPDF = async () => {
@@ -91,7 +95,7 @@ const [items, setItems] = useState<Item[]>([]);
                 className="text-lg font-semibold"
                 style={{ color: "#1f2937" }}
               >
-                ${item.price*item.quantity}
+                ${item.price * item.quantity}
               </div>
             </div>
           ))}
@@ -102,14 +106,14 @@ const [items, setItems] = useState<Item[]>([]);
           <div className="flex justify-between mb-2">
             <span style={{ color: "#6b7280" }}>Date & Time</span>
             <span className="font-semibold" style={{ color: "#1f2937" }}>
-                {new Date().toLocaleString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-                })}
+              {new Date().toLocaleString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </span>
           </div>
           <div className="flex justify-between mb-2">

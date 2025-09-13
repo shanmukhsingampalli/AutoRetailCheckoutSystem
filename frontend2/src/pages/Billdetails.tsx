@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 
@@ -15,19 +15,25 @@ function BillDetails() {
 
   const [items, setItems] = useState<Item[]>([]);
   const [searchParams] = useSearchParams();
-  const billId = searchParams.get('billId');
+  const billId = searchParams.get("billId");
 
   useEffect(() => {
     const fetchBillDetails = async () => {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/bill/getBillDetails`, {
-        billId
-      })
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/bill/getBillDetails`,
+        {
+          billId,
+        }
+      );
       setItems(response.data.data.bill.items);
-    }
+    };
     fetchBillDetails();
   }, []);
 
-  const subtotal = items.reduce((sum, item) => sum + item.price*item.quantity, 0);
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
 
@@ -63,7 +69,7 @@ function BillDetails() {
                 className="text-lg font-semibold"
                 style={{ color: "#1f2937" }}
               >
-                ${item.price.toFixed(2)*item.quantity}
+                ${item.price.toFixed(2) * item.quantity}
               </div>
             </div>
           ))}

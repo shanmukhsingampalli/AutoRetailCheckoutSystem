@@ -1,6 +1,6 @@
 import { useState } from "react";
 import BarcodeScannerComponent from "react-qr-barcode-scanner";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 interface ScanProps {
   setData: React.Dispatch<React.SetStateAction<string>>; // ✅ correct typing

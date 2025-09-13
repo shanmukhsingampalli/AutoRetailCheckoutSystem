@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ArrowLeft, Search, FileText, ChevronRight } from "lucide-react";
@@ -18,16 +18,20 @@ function Bill() {
 
   useEffect(() => {
     const fetchBills = async () => {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/bill/viewAllBills`,{},{
-        headers : {
-          Authorization : `Bearer ${localStorage.getItem("token")}`
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/bill/viewAllBills`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         }
-      });
+      );
       setBills(response.data.data.bills);
-    }
+    };
 
     fetchBills();
-  },[])
+  }, []);
 
   // Filter bills by ID
   const filteredBills = bills.filter((bill) =>
@@ -38,9 +42,7 @@ function Bill() {
     <div className="min-h-screen max-w-4xl mx-auto">
       {/* Header */}
       <div className="bg-white px-4 py-4">
-        <div 
-        onClick={() => navigate("/")}
-        className="flex items-center">
+        <div onClick={() => navigate("/")} className="flex items-center">
           <button className="p-1">
             <ArrowLeft className="w-6 h-6 text-gray-600" />
           </button>
@@ -85,7 +87,9 @@ function Bill() {
                     <div className="text-lg font-semibold text-gray-900">
                       ${bill.totalAmount.toFixed(2)}
                     </div>
-                    <div className="text-sm text-gray-500">ID: {bill.billId}</div>
+                    <div className="text-sm text-gray-500">
+                      ID: {bill.billId}
+                    </div>
                   </div>
                 </div>
 
