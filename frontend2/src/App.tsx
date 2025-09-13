@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import AllProducts from "./pages/AllProducts";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import Bill from "./pages/Bill";
+import BillDetails from "./pages/Billdetails";
 
 function App() {
   return (
@@ -31,6 +32,14 @@ function App() {
         element={
           <ProtectedRoute>
             <Bill />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/bills-details"
+        element={
+          <ProtectedRoute>
+            <BillDetails />
           </ProtectedRoute>
         }
       />

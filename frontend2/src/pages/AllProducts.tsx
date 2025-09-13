@@ -20,14 +20,17 @@ function AllProducts() {
 
   const [products, setProducts] = useState<Product[]>([]);
 
-   useEffect(() => {
+  useEffect(() => {
     const fetchProducts = async () => {
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/product/viewAllProducts`,{})
-      console.log(response)
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/product/viewAllProducts`,
+        {}
+      );
+      console.log(response);
       setProducts(response.data.data.products);
-    }
+    };
     fetchProducts();
-   }, [])
+  }, []);
 
   const getStockColor = (stock: number) => {
     if (stock >= 100) return "bg-green-100 text-green-700";
@@ -68,11 +71,12 @@ function AllProducts() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
 
-        <div 
-        onClick={()=>{
-            navigate("/")
+        <div
+          onClick={() => {
+            navigate("/");
           }}
-        className="flex items-center mb-8 gap-4">
+          className="flex items-center mb-8 gap-4"
+        >
           <ChevronLeft />
 
           <h1 className="text-3xl font-semibold text-gray-900">Products</h1>
@@ -134,7 +138,9 @@ function AllProducts() {
                   <h3 className="text-lg font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
                     {product.name}
                   </h3>
-                  <p className="text-sm text-gray-500 mt-1">#{product.barcode}</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    #{product.barcode}
+                  </p>
                 </div>
                 <div className="flex items-center space-x-6">
                   <span className="text-lg font-semibold text-gray-900">

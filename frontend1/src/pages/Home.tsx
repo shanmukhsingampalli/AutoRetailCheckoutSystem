@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import BarcodeScanner from "react-qr-barcode-scanner";
 import { ArrowLeft, QrCode, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // ✅ Import navigate
 
 interface CartItem {
   id: number;
@@ -11,6 +12,7 @@ interface CartItem {
 }
 
 const ShoppingCart: React.FC = () => {
+  const navigate = useNavigate(); // ✅ hook for navigation
   const [cam, setCam] = useState(false);
 
   const [cartItems, setCartItems] = useState<CartItem[]>([
@@ -113,6 +115,10 @@ const ShoppingCart: React.FC = () => {
   };
 
   const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+
+  const handelPayment = () => {
+    navigate("/payment", { replace: true });
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -222,7 +228,10 @@ const ShoppingCart: React.FC = () => {
             </span>
           </div>
 
-          <button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 px-6 rounded-2xl flex items-center justify-center space-x-2 transition-colors shadow-sm">
+          <button
+            className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-4 px-6 rounded-2xl flex items-center justify-center space-x-2 transition-colors shadow-sm"
+            onClick={handelPayment}
+          >
             <span>Checkout</span>
             <ArrowLeft className="w-5 h-5 rotate-180" />
           </button>
