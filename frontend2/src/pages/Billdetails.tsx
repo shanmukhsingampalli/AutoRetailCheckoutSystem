@@ -69,7 +69,7 @@ function BillDetails() {
                 className="text-lg font-semibold"
                 style={{ color: "#1f2937" }}
               >
-                ${item.price.toFixed(2) * item.quantity}
+                ${item.quantity * item.price}
               </div>
             </div>
           ))}

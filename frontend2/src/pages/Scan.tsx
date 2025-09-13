@@ -11,14 +11,15 @@ const Scan: React.FC<ScanProps> = ({ setData }) => {
   const [scanHistory, setScanHistory] = useState<string[]>([]);
   const beepSound = new Audio("/beep.mp3");
 
-  const handleScan = (_err: unknown, result: { text: string } | null) => {
-    if (result && result.text) {
-      setData(result.text); // ✅ update parent state
-      setCurrentData(result.text);
-      setScanHistory((prev) => [...prev, result.text]);
-      console.log("Scanned:", result.text);
+  // @ts-expect-error: result type is handled manually
+  const handleScan = (_err: unknown, result) => {
+    if (result?.text) {
+      setData(result?.text); // ✅ update parent state
+      setCurrentData(result?.text);
+      setScanHistory((prev) => [...prev, result?.text]);
+      console.log("Scanned:", result?.text);
       beepSound.play();
-      toast.success(`Product scanned: ${result.text}`);
+      toast.success(`Product scanned: ${result?.text}`);
     } else {
       setCurrentData("No result");
     }
