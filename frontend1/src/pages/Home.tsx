@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import BarcodeScanner from "react-qr-barcode-scanner";
+import React, { useEffect, useState } from "react";
 import { ArrowLeft, QrCode, Trash2 } from "lucide-react";
-import { useNavigate } from "react-router-dom"; // ✅ Import navigate
+import { useNavigate } from "react-router-dom";
+import Scan from "./Scan";
 
 interface CartItem {
   id: number;
@@ -12,8 +12,16 @@ interface CartItem {
 }
 
 const ShoppingCart: React.FC = () => {
-  const navigate = useNavigate(); // ✅ hook for navigation
+  const navigate = useNavigate();
   const [cam, setCam] = useState(false);
+  const [data, setData] = useState("No result");
+
+  useEffect(() => {
+    if (data !== "No result") {
+      setCam(false); // ✅ turn scanner off after successful scan
+      addItem(data); // ✅ add scanned item to cart
+    }
+  }, [data]);
 
   const [cartItems, setCartItems] = useState<CartItem[]>([
     {
@@ -23,27 +31,9 @@ const ShoppingCart: React.FC = () => {
       price: 2.99,
       unitPrice: 2.99,
     },
-    {
-      id: 2,
-      name: "Whole Milk",
-      quantity: 2,
-      price: 3.5,
-      unitPrice: 1.75,
-    },
-    {
-      id: 3,
-      name: "Sourdough Bread",
-      quantity: 1,
-      price: 4.5,
-      unitPrice: 4.5,
-    },
-    {
-      id: 4,
-      name: "Avocado",
-      quantity: 1,
-      price: 1.75,
-      unitPrice: 1.75,
-    },
+    { id: 2, name: "Whole Milk", quantity: 2, price: 3.5, unitPrice: 1.75 },
+    { id: 3, name: "Sourdough Bread", quantity: 1, price: 4.5, unitPrice: 4.5 },
+    { id: 4, name: "Avocado", quantity: 1, price: 1.75, unitPrice: 1.75 },
   ]);
 
   const addItem = (id: string) => {
@@ -134,9 +124,7 @@ const ShoppingCart: React.FC = () => {
         <div className="p-4 space-y-6">
           {/* Scan Product Section */}
           <div
-            onClick={() => {
-              setCam(true);
-            }}
+            onClick={() => setCam(true)}
             className="bg-gray-50 rounded-2xl p-4 border border-gray-200 cursor-pointer"
           >
             <div className="flex items-center space-x-3">
@@ -147,18 +135,7 @@ const ShoppingCart: React.FC = () => {
             </div>
           </div>
 
-          {cam && (
-            <BarcodeScanner
-              width={500}
-              height={500}
-              onUpdate={(err, result) => {
-                if (result) {
-                  addItem(result.text);
-                  setCam(false);
-                }
-              }}
-            />
-          )}
+          {cam && <Scan setData={setData} />}
 
           {/* Items in Cart */}
           <div>

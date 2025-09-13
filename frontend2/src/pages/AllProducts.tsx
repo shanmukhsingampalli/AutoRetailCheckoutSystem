@@ -15,10 +15,9 @@ function AllProducts() {
   const [searchTerm, setSearchTerm] = useState("");
   const [sortField, setSortField] = useState<"name" | "stock">("name");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+  const [products, setProducts] = useState<Product[]>([]);
 
   const navigate = useNavigate();
-
-  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -57,28 +56,22 @@ function AllProducts() {
     .sort((a, b) => {
       const aValue = sortField === "name" ? a.name : a.stock;
       const bValue = sortField === "name" ? b.name : b.stock;
-
-      if (sortDirection === "asc") {
-        return aValue > bValue ? 1 : -1;
-      } else {
-        return aValue < bValue ? 1 : -1;
-      }
+      if (sortDirection === "asc") return aValue > bValue ? 1 : -1;
+      return aValue < bValue ? 1 : -1;
     });
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
+      <div className="max-w-5xl mx-auto">
         {/* Header */}
-
         <div
-          onClick={() => {
-            navigate("/");
-          }}
-          className="flex items-center mb-8 gap-4"
+          onClick={() => navigate("/")}
+          className="flex items-center mb-6 gap-3 cursor-pointer"
         >
-          <ChevronLeft />
-
-          <h1 className="text-3xl font-semibold text-gray-900">Products</h1>
+          <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-900">
+            Products
+          </h1>
         </div>
 
         {/* Search Bar */}
@@ -91,13 +84,13 @@ function AllProducts() {
             placeholder="Search products"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+            className="w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
           />
         </div>
 
         {/* Table Header */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-          <div className="flex items-center justify-between px-6 py-4 bg-gray-50 border-b border-gray-200">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 px-4 sm:px-6 py-3 sm:py-4 bg-gray-50 border-b border-gray-200">
             <button
               onClick={() => handleSort("name")}
               className="flex items-center space-x-1 text-gray-600 hover:text-gray-900 font-medium transition-colors duration-200"
@@ -131,22 +124,22 @@ function AllProducts() {
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
-                className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors duration-200 cursor-pointer group"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between px-4 sm:px-6 py-3 sm:py-4 hover:bg-gray-50 transition-colors duration-200 cursor-pointer group"
               >
                 <div className="flex-1">
-                  <h3 className="text-lg font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+                  <h3 className="text-base sm:text-lg font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
                     {product.name}
                   </h3>
-                  <p className="text-sm text-gray-500 mt-1">
+                  <p className="text-xs sm:text-sm text-gray-500 mt-1">
                     #{product.barcode}
                   </p>
                 </div>
-                <div className="flex items-center space-x-6">
-                  <span className="text-lg font-semibold text-gray-900">
+                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:space-x-6 mt-2 sm:mt-0">
+                  <span className="text-base sm:text-lg font-semibold text-gray-900">
                     ${product.price.toFixed(2)}
                   </span>
                   <span
-                    className={`px-3 py-1 rounded-full text-sm font-medium ${getStockColor(
+                    className={`px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getStockColor(
                       product.stock
                     )}`}
                   >
@@ -158,9 +151,11 @@ function AllProducts() {
           </div>
 
           {filteredProducts.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No products found</p>
-              <p className="text-gray-400 text-sm mt-2">
+            <div className="text-center py-8 sm:py-12">
+              <p className="text-gray-500 text-base sm:text-lg">
+                No products found
+              </p>
+              <p className="text-gray-400 text-xs sm:text-sm mt-2">
                 Try adjusting your search terms
               </p>
             </div>
