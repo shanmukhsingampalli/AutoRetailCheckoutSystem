@@ -5,6 +5,7 @@ import AllProducts from "./pages/AllProducts";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import Bill from "./pages/Bill";
 import BillDetails from "./pages/Billdetails";
+import UpdateProduct from "./pages/UpdateProduct";
 
 function App() {
   return (
@@ -40,6 +41,14 @@ function App() {
         element={
           <ProtectedRoute>
             <BillDetails />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add-update-product"
+        element={
+          <ProtectedRoute>
+            <UpdateProduct />
           </ProtectedRoute>
         }
       />

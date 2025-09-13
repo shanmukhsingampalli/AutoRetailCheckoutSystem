@@ -20,7 +20,7 @@ const Home: React.FC = () => {
           {/* Add or Update Product Card */}
           <div 
           onClick={()=>{
-            // navigate("/")
+            navigate("/add-update-product")
           }}
           className="bg-white rounded-2xl border border-gray-200 p-8 text-center shadow-sm">
             <div className="w-20 h-20 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
