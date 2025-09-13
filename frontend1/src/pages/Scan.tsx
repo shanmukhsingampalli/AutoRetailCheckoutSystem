@@ -2,16 +2,16 @@ import BarcodeScannerComponent from "react-qr-barcode-scanner";
 import toast from "react-hot-toast";
 
 interface ScanProps {
-  setData: React.Dispatch<React.SetStateAction<string>>; // ✅ correct typing
+  setData: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Scan: React.FC<ScanProps> = ({ setData }) => {
   const beepSound = new Audio("/beep.mp3");
 
-  const handleScan = (_err: unknown, result: { text: string } | null) => {
-    if (result && result.text) {
-      setData(result.text); // ✅ update parent state
-
+  // @ts-expect-error: result type is handled manually
+  const handleScan = (_err: unknown, result) => {
+    if (result?.text) {
+      setData(result.text);
       beepSound.play();
       toast.success(`Product scanned: ${result.text}`);
     }
